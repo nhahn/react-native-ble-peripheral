@@ -46,16 +46,42 @@ class BLEPeripheral: RCTEventEmitter, CBPeripheralManagerDelegate {
     }
     
     @objc(addCharacteristicToService:uuid:permissions:properties:data:)
-    func addCharacteristicToService(_ serviceUUID: String, uuid: String, permissions: UInt, properties: UInt, data: String) {
+    func addCharacteristicToService(_ serviceUUID: String, uuid: String, permissions: UInt, properties: UInt) {
         let characteristicUUID = CBUUID(string: uuid)
         let propertyValue = CBCharacteristicProperties(rawValue: properties)
         let permissionValue = CBAttributePermissions(rawValue: permissions)
-        let byteData: Data = data.data(using: .utf8)!
         let characteristic = CBMutableCharacteristic( type: characteristicUUID, properties: propertyValue, value: byteData, permissions: permissionValue)
         servicesMap[serviceUUID]?.characteristics?.append(characteristic)
         print("added characteristic to service")
     }
     
+    @objc(addServiceWithCharacteristics:characteristicUUID:permissions:properties:)
+    func addServiceWithCharacteristics(_ serviceUUID: String, characteristicUUID: String, permissions: UInt, properties: UInt) {
+        let serviceCBUUID = CBUUID(string: serviceUUID)
+        let service = CBMutableService(type: serviceCBUUID, primary: true)
+        
+        if (servicesMap.keys.contains(serviceUUID) == true){
+            let servToRmv: CBMutableService? = servicesMap[serviceUUID]
+            if (servToRmv != nil) {
+            manager.remove(servToRmv!);
+            servicesMap.removeValue(forKey: serviceUUID);
+            alertJS("service \(serviceUUID) already there - REMOVING")
+            }
+        }
+        
+        let characteristicUUID = CBUUID(string: serviceUUID)
+        let propertyValue = CBCharacteristicProperties(rawValue: properties)
+        let permissionValue = CBAttributePermissions(rawValue: permissions)
+        let characteristic = CBMutableCharacteristic(type: characteristicUUID, properties: propertyValue, value: nil, permissions: permissionValue)
+        
+        print("adding characteristic \(characteristic)")
+        service.characteristics = [characteristic];
+        servicesMap[serviceUUID] = service
+        manager.add(service)
+        print("added service \(serviceUUID)")
+    }
+
+
     @objc func start(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         if (manager.state != .poweredOn) {
             alertJS("Bluetooth turned off")

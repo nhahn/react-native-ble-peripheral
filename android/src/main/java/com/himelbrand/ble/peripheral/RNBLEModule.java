@@ -109,6 +109,19 @@ public class RNBLEModule extends ReactContextBaseJavaModule{
         this.servicesMap.get(serviceUUID).addCharacteristic(tempChar);
     }
 
+     @ReactMethod
+    public void addServiceWithCharacteristic(String serviceUUID, String uuid, Integer permissions, Integer properties) {
+        UUID SERVICE_UUID = UUID.fromString(uuid);
+        int type = primary ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
+        BluetoothGattService tempService = new BluetoothGattService(SERVICE_UUID, type);
+        UUID CHAR_UUID = UUID.fromString(uuid);
+        BluetoothGattCharacteristic tempChar = new BluetoothGattCharacteristic(CHAR_UUID, properties, permissions);
+        tempService.addCharacteristic(tempChar);
+
+        if(!this.servicesMap.containsKey(uuid))
+            this.servicesMap.put(uuid, tempService);
+    }
+
     private final BluetoothGattServerCallback mGattServerCallback = new BluetoothGattServerCallback() {
         @Override
         public void onConnectionStateChange(BluetoothDevice device, final int status, int newState) {
@@ -222,6 +235,7 @@ public class RNBLEModule extends ReactContextBaseJavaModule{
             // pointer exception is raised.
             advertiser.stopAdvertising(advertisingCallback);
         }
+        advertising = false;
     }
     @ReactMethod
     public void sendNotificationToDevices(String serviceUUID,String charUUID,ReadableArray message) {

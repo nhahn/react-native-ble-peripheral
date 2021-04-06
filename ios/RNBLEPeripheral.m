@@ -20,9 +20,15 @@ RCT_EXTERN_METHOD(
 )
 RCT_EXTERN_METHOD(
     addCharacteristicToService: (NSString *)uuid
+    characteristicUUID:         (NSString *)uuid
     permissions:                (NSInteger *)permissions
     properties:                 (NSInteger *)properties
-    data:                       (NSString *)data
+)
+RCT_EXTERN_METHOD(
+    addServiceWithCharacteristics: (NSString *)uuid
+    characteristicUUID:            (NSString *)uuid
+    permissions:                   (NSInteger *)permissions
+    properties:                    (NSInteger *)properties
 )
 RCT_EXTERN_METHOD(
     start:
