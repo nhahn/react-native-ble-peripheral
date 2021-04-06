@@ -112,7 +112,7 @@ public class RNBLEModule extends ReactContextBaseJavaModule{
      @ReactMethod
     public void addServiceWithCharacteristic(String serviceUUID, String uuid, Integer permissions, Integer properties) {
         UUID SERVICE_UUID = UUID.fromString(uuid);
-        int type = primary ? BluetoothGattService.SERVICE_TYPE_PRIMARY : BluetoothGattService.SERVICE_TYPE_SECONDARY;
+        int type = BluetoothGattService.SERVICE_TYPE_PRIMARY;
         BluetoothGattService tempService = new BluetoothGattService(SERVICE_UUID, type);
         UUID CHAR_UUID = UUID.fromString(uuid);
         BluetoothGattCharacteristic tempChar = new BluetoothGattCharacteristic(CHAR_UUID, properties, permissions);
