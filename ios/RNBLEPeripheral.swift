@@ -55,8 +55,8 @@ class BLEPeripheral: RCTEventEmitter, CBPeripheralManagerDelegate {
         print("added characteristic to service")
     }
     
-    @objc(addServiceWithCharacteristics:characteristicUUID:permissions:properties:)
-    func addServiceWithCharacteristics(_ serviceUUID: String, characteristicUUID: String, permissions: UInt, properties: UInt) {
+    @objc(addServiceWithCharacteristic:characteristicUUID:permissions:properties:)
+    func addServiceWithCharacteristic(_ serviceUUID: String, characteristicUUID: String, permissions: UInt, properties: UInt) {
         let serviceCBUUID = CBUUID(string: serviceUUID)
         let service = CBMutableService(type: serviceCBUUID, primary: true)
         
