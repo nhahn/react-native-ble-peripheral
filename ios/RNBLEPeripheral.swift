@@ -69,10 +69,10 @@ class BLEPeripheral: RCTEventEmitter, CBPeripheralManagerDelegate {
             }
         }
         
-        let characteristicUUID = CBUUID(string: serviceUUID)
+        let charUUID = CBUUID(string: characteristicUUID)
         let propertyValue = CBCharacteristicProperties(rawValue: properties)
         let permissionValue = CBAttributePermissions(rawValue: permissions)
-        let characteristic = CBMutableCharacteristic(type: characteristicUUID, properties: propertyValue, value: nil, permissions: permissionValue)
+        let characteristic = CBMutableCharacteristic(type: charUUID, properties: propertyValue, value: nil, permissions: permissionValue)
         
         print("adding characteristic \(characteristic)")
         service.characteristics = [characteristic];
